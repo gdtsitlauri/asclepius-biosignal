@@ -1,0 +1,40 @@
+version: "3.9"
+
+services:
+  asclepius:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    image: asclepius-biosignal:latest
+    container_name: asclepius
+    ports:
+      - "8501:8501"
+    volumes:
+      - ../data:/workspace/data
+      - ../results:/workspace/results
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    environment:
+      - CUDA_VISIBLE_DEVICES=0
+    restart: unless-stopped
+
+  asclepius-cpu:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    image: asclepius-biosignal:latest
+    container_name: asclepius-cpu
+    ports:
+      - "8502:8501"
+    volumes:
+      - ../data:/workspace/data
+      - ../results:/workspace/results
+    environment:
+      - CUDA_VISIBLE_DEVICES=""
+    profiles:
+      - cpu
