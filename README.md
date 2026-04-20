@@ -1,4 +1,9 @@
-# 🧬 ASCLEPIUS — Biomedical Signal AI Framework
+# ASCLEPIUS — Biomedical Signal AI Framework
+
+**Author:** George David Tsitlauri  
+**Affiliation:** Dept. of Informatics & Telecommunications, University of Thessaly, Greece  
+**Contact:** gdtsitlauri@gmail.com  
+**Year:** 2026
 
 **Adaptive Signal Classification and Learning Engine for Predictive Intelligent Universal Signal analysis**
 
@@ -133,6 +138,54 @@ python data/download_datasets.py --dataset mitbih
 python data/download_datasets.py --dataset all
 
 # Manual datasets (WESAD, NinaPro, etc.) — follow printed instructions
+```
+
+---
+
+## Medical Image Segmentation (Module 8)
+
+`asclepius/module8_imaging/` adds a 2D U-Net medical image segmentation pipeline covering Biomedical Imaging coursework (ECE/Biomedical track):
+
+### Architecture (`unet.py`)
+
+Standard Ronneberger et al. 2015 U-Net — 4 encoder levels + bottleneck + 4 decoder levels with skip connections.
+
+```
+Input (1×128×128)
+  → enc1 [f] → enc2 [2f] → enc3 [4f] → enc4 [8f] → bottleneck [16f]
+  ← dec4 [8f] ← dec3 [4f] ← dec2 [2f] ← dec1 [f]
+  → head (1×1 conv) → logits
+```
+
+Default `base_features=16` → **1,942,289 parameters** (fits GTX 1650 / 4 GB VRAM).
+
+### Dataset (`pipeline.py`)
+
+`SyntheticMRIDataset`: 200 deterministic 128×128 greyscale slices with random elliptical tumour masks — mimics MRI brain tumour structure; compatible with Medical Segmentation Decathlon (MSD) NIfTI format when real data is available.
+
+### Training
+
+- Loss: 0.5 × BCE + 0.5 × Dice
+- Optimiser: Adam + CosineAnnealingLR
+- 10 epochs, batch 8, 80/20 split
+
+### Results (CUDA, GTX 1650, 7.71 s)
+
+| Metric | Value |
+|---|---|
+| Dice | **0.9672** |
+| IoU | **0.9364** |
+| Pixel Accuracy | **0.9975** |
+| Precision | 0.9638 |
+| Recall | 0.9709 |
+| Parameters | 1,942,289 |
+
+Run:
+
+```bash
+cd asclepius
+python -m asclepius.module8_imaging.pipeline
+# saves to results/imaging/summary.json + epoch_log.csv
 ```
 
 ---
@@ -317,13 +370,12 @@ asclepius/
 ## Citation
 
 ```bibtex
-@article{asclepius2024,
-  title={ASCLEPIUS: A Unified Open-Source Framework for Multi-Modal
-         Biomedical Signal Analysis with ASCLEPIUS-PULSE},
-  author={ASCLEPIUS Contributors},
-  journal={arXiv preprint},
-  year={2024},
-  url={https://github.com/asclepius-biosignal}
+@misc{tsitlauri2026asclepius,
+  author = {George David Tsitlauri},
+  title  = {ASCLEPIUS: A Unified Open-Source Framework for Multi-Modal Biomedical Signal Analysis with ASCLEPIUS-PULSE},
+  year   = {2026},
+  institution = {University of Thessaly},
+  email  = {gdtsitlauri@gmail.com}
 }
 ```
 

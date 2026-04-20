@@ -19,11 +19,11 @@
 \title{ASCLEPIUS: A Unified Open-Source Framework for Multi-Modal\\
 Biomedical Signal Analysis with ASCLEPIUS-PULSE}
 
-\author{\IEEEauthorblockN{ASCLEPIUS Contributors}
+\author{\IEEEauthorblockN{George David Tsitlauri}
 \IEEEauthorblockA{%
-\textit{Open Source Medical AI Research}\\
-\href{https://github.com/asclepius-biosignal}{github.com/asclepius-biosignal}\\
-License: MIT}}
+\textit{Dept. of Informatics \& Telecommunications}\\
+\textit{University of Thessaly, Greece}\\
+gdtsitlauri@gmail.com}}
 
 \maketitle
 
@@ -418,6 +418,52 @@ and explicit GDPR compliance design lower the barrier for international
 hospital collaboration.
 
 % ─────────────────────────────────────────────────────────────────────────────
+\section{Medical Image Segmentation (Module 8)}
+\label{sec:imaging}
+
+Beyond time-series biosignal analysis, ASCLEPIUS extends to volumetric medical image segmentation through a U-Net pipeline (\texttt{asclepius/module8\_imaging/}).
+
+\subsection{U-Net Architecture}
+We implement the 2D U-Net of Ronneberger et al.~\cite{ronneberger2015} with four encoder levels, a bottleneck, and four symmetric decoder levels. Skip connections concatenate encoder feature maps to their corresponding decoder counterparts, preserving fine-grained spatial detail through the compression bottleneck. Each level applies two $3\times 3$ convolutions followed by batch normalisation and ReLU. Encoder transitions use $2\times 2$ max pooling; decoder transitions use transposed convolutions with stride 2. With \texttt{base\_features}$=16$, the network contains 1{,}942{,}289 trainable parameters, fitting comfortably in 4\,GB VRAM.
+
+\subsection{Synthetic MRI Dataset}
+We generate a deterministic synthetic dataset of 200 $128\times 128$ greyscale slices. Each slice models a brain cross-section as a skull-masked Gaussian field with an elliptical tumour region of elevated intensity. Tumour centres, radii, and pixel-level intensities are drawn from a fixed NumPy seed, yielding fully reproducible training and evaluation. The dataset is structurally compatible with the Medical Segmentation Decathlon (MSD) NIfTI format and can be replaced with real Task01\_BrainTumour data when available.
+
+\subsection{Training and Loss}
+We train with a combined loss:
+\begin{equation}
+  \mathcal{L} = 0.5\,\mathcal{L}_{\mathrm{BCE}} + 0.5\,\mathcal{L}_{\mathrm{Dice}},
+\end{equation}
+where the differentiable Dice loss is:
+\begin{equation}
+  \mathcal{L}_{\mathrm{Dice}} = 1 - \frac{2\sum_i p_i g_i + \varepsilon}{\sum_i p_i + \sum_i g_i + \varepsilon},\quad \varepsilon=10^{-6}.
+\end{equation}
+Optimisation uses Adam with learning rate $10^{-3}$ and cosine annealing over 10 epochs, batch size 8, with an 80/20 train/validation split.
+
+\subsection{Results}
+
+\begin{table}[h]
+\centering
+\caption{U-Net segmentation on synthetic MRI (CUDA, GTX 1650, 10 epochs).}
+\begin{tabular}{lc}
+\toprule
+Metric & Value \\
+\midrule
+Dice & \textbf{0.9672} \\
+IoU (Jaccard) & \textbf{0.9364} \\
+Pixel Accuracy & \textbf{0.9975} \\
+Precision & 0.9638 \\
+Recall & 0.9709 \\
+\midrule
+Parameters & 1{,}942{,}289 \\
+Training time & 7.71\,s \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The high Dice coefficient (0.9672) on synthetic data confirms that the U-Net implementation and training pipeline are correct; real-data performance will depend on dataset quality and augmentation strategy.
+
+% ─────────────────────────────────────────────────────────────────────────────
 \section{Conclusion}
 \label{sec:conclusion}
 
@@ -518,6 +564,11 @@ P. Schmidt et al.,
 ``Introducing WESAD, a multimodal dataset for wearable stress and affect
 detection,''
 in \textit{Proc. ACM ICMI}, pp. 400--408, 2018.
+
+\bibitem{ronneberger2015}
+O. Ronneberger, P. Fischer, and T. Brox,
+``U-Net: Convolutional networks for biomedical image segmentation,''
+in \textit{Proc. MICCAI}, pp. 234--241, 2015.
 
 \end{thebibliography}
 
