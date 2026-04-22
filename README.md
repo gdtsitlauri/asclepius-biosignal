@@ -1,9 +1,5 @@
 # ASCLEPIUS — Biomedical Signal AI Framework
 
-**Author:** George David Tsitlauri  
-**Affiliation:** Dept. of Informatics & Telecommunications, University of Thessaly, Greece  
-**Contact:** gdtsitlauri@gmail.com  
-**Year:** 2026
 
 **Adaptive Signal Classification and Learning Engine for Predictive Intelligent Universal Signal analysis**
 
@@ -14,7 +10,15 @@
 [![PyTorch](https://img.shields.io/badge/PyTorch-2.1+-ee4c2c.svg)](https://pytorch.org/)
 [![CUDA](https://img.shields.io/badge/CUDA-12.x-76b900.svg)](https://developer.nvidia.com/cuda-toolkit)
 
----
+
+## Project Metadata
+
+| Field | Value |
+| --- | --- |
+| Author | George David Tsitlauri |
+| Affiliation | Dept. of Informatics & Telecommunications, University of Thessaly, Greece |
+| Contact | gdtsitlauri@gmail.com |
+| Year | 2026 |
 
 ## Overview
 
@@ -29,8 +33,6 @@ ASCLEPIUS is the most complete open-source AI framework for biomedical signal an
 | **Pre-Onset Disease Prediction** | Predicts epilepsy, AF, burnout **before** symptoms appear |
 | **Federated + Differential Privacy** | GDPR-compliant multi-hospital training |
 | **Unified Framework** | First open-source framework covering all 5 biosignal types |
-
----
 
 ## Architecture
 
@@ -78,8 +80,6 @@ ASCLEPIUS
     └── Federated vs centralized comparison
 ```
 
----
-
 ## Quick Start
 
 ### Installation
@@ -118,8 +118,6 @@ docker-compose up                    # GPU (requires nvidia-docker)
 docker-compose --profile cpu up      # CPU fallback
 ```
 
----
-
 ## Signal Types & Datasets
 
 | Signal | Task | Dataset | Sampling Rate |
@@ -139,8 +137,6 @@ python data/download_datasets.py --dataset all
 
 # Manual datasets (WESAD, NinaPro, etc.) — follow printed instructions
 ```
-
----
 
 ## Medical Image Segmentation (Module 8)
 
@@ -188,8 +184,6 @@ python -m asclepius.module8_imaging.pipeline
 # saves to results/imaging/summary.json + epoch_log.csv
 ```
 
----
-
 ## Results Summary
 
 ### Per-Signal Classification (CNN1D, macro-F1)
@@ -228,8 +222,6 @@ python -m asclepius.module8_imaging.pipeline
 | **FedAvg + DP (σ=1.1)** | **0.395** | ε=1.0 |
 
 Formal differential privacy guarantees across 5 heterogeneous hospital splits.
-
----
 
 ## Code Usage Examples
 
@@ -319,15 +311,11 @@ server = FederatedServer(
 result = server.run()
 ```
 
----
-
 ## Running Tests
 
 ```bash
 pytest tests/ -v --cov=asclepius
 ```
-
----
 
 ## Hardware Requirements
 
@@ -337,8 +325,6 @@ pytest tests/ -v --cov=asclepius
 | RAM | 16 GB | 8 GB |
 | Storage | 50 GB (datasets) | 5 GB (code only) |
 | Python | 3.11+ | 3.11 |
-
----
 
 ## Project Structure
 
@@ -365,27 +351,4 @@ asclepius/
 └── setup.py
 ```
 
----
 
-## Citation
-
-```bibtex
-@misc{tsitlauri2026asclepius,
-  author = {George David Tsitlauri},
-  title  = {ASCLEPIUS: A Unified Open-Source Framework for Multi-Modal Biomedical Signal Analysis with ASCLEPIUS-PULSE},
-  year   = {2026},
-  institution = {University of Thessaly},
-  email  = {gdtsitlauri@gmail.com}
-}
-```
-
----
-
-## License
-
-MIT License — see [LICENSE](LICENSE) for details.
-
-## Contributing
-
-Pull requests welcome! Please see our contribution guidelines.
-All contributions must include tests and maintain the existing code style.
